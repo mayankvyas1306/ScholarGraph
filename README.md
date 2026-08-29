@@ -1,8 +1,8 @@
-# 🧠 ResearchMind
+# 🧠 ScholarGraph
 
 > **Agentic AI Literature Review & Research Gap Discovery**
 
-ResearchMind is an agentic AI system that automates systematic academic literature reviews. It builds a **citation and topic-similarity network** from live arXiv/Semantic Scholar data, identifies **research gaps** (areas with below-median citation density), and presents a fully inspectable citation subgraph behind every finding — ensuring transparency and auditability at every step.
+ScholarGraph is an agentic AI system that automates systematic academic literature reviews. It builds a **citation and topic-similarity network** from live arXiv/Semantic Scholar data, identifies **research gaps** (areas with below-median citation density), and presents a fully inspectable citation subgraph behind every finding — ensuring transparency and auditability at every step.
 
 ---
 
@@ -106,7 +106,7 @@ Research-Mind/
 
 ## 🚀 Backend Setup
 
-This section walks through every step required to get the ResearchMind backend running locally, from environment activation to verifying the server is live.
+This section walks through every step required to get the ScholarGraph backend running locally, from environment activation to verifying the server is live.
 
 ---
 
@@ -401,7 +401,7 @@ Open **[http://localhost:5173](http://localhost:5173)** in your browser. The app
 ### Step 5 — Verify the App is Working
 
 1. Open `http://localhost:5173` in your browser
-2. You should see the ResearchMind dark-mode dashboard
+2. You should see the ScholarGraph dark-mode dashboard
 3. Enter a topic (e.g. `"attention mechanisms"`) in the query box
 4. Click **Run Review** — the progress tracker should show each agent status updating in real time
 
@@ -479,7 +479,7 @@ python -m pytest tests/integration/
 
 ## 🛡️ Offline Resilience & Demo Mode
 
-ResearchMind is designed to remain usable even without live API access:
+ScholarGraph is designed to remain usable even without live API access:
 
 - **Local Caching**: The search agent caches all API responses under `backend/db/cache/`. Repeated queries are served from the cache instantly.
 - **Committed Fallback Dataset**: If the system is fully offline or rate-limited, it automatically falls back to:
