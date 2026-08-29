@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32" fill="none">
+  <!-- Black background square -->
+  <rect width="32" height="32" rx="7" fill="#0a0a0a"/>
+
+  <!-- Open book - left page -->
+  <path d="M8 9.5C8 8.94772 8.44772 8.5 9 8.5H15V23.5H9C8.44772 23.5 8 23.0523 8 22.5V9.5Z" fill="white" fill-opacity="0.95"/>
+  <!-- Open book - right page -->
+  <path d="M17 8.5H23C23.5523 8.5 24 8.94772 24 9.5V22.5C24 23.0523 23.5523 23.5 23 23.5H17V8.5Z" fill="white" fill-opacity="0.5"/>
+  <!-- Spine -->
+  <rect x="15" y="8.5" width="2" height="15" fill="white" fill-opacity="0.3"/>
+  <!-- Text lines on left page -->
+  <rect x="10" y="12" width="4" height="1" rx="0.5" fill="#0a0a0a" fill-opacity="0.4"/>
+  <rect x="10" y="14.5" width="3" height="1" rx="0.5" fill="#0a0a0a" fill-opacity="0.4"/>
+  <rect x="10" y="17" width="4" height="1" rx="0.5" fill="#0a0a0a" fill-opacity="0.4"/>
+  <rect x="10" y="19.5" width="2.5" height="1" rx="0.5" fill="#0a0a0a" fill-opacity="0.4"/>
+</svg>
