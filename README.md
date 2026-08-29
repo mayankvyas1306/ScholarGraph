@@ -8,15 +8,15 @@ ScholarGraph is an agentic AI system that automates systematic academic literatu
 
 ## ✨ Key Features
 
-| Feature | Description |
-|---|---|
+| Feature                           | Description                                                    |
+| --------------------------------- | -------------------------------------------------------------- |
 | 🤖 **6-Agent LangGraph Pipeline** | Planner → Search → Extraction → Synthesis → Graph/Gap → Report |
-| 🔍 **Multi-source Search** | Queries arXiv and Semantic Scholar in parallel |
-| 🕸️ **Citation Graph Analysis** | NetworkX graph with gap detection via citation density |
-| 📊 **Interactive Dashboard** | Vite + React UI with glassmorphic styling |
-| 📄 **Export Reports** | One-click PDF (ReportLab) and DOCX (python-docx) export |
-| 🛡️ **Offline Resilience** | Committed fallback dataset + local ChromaDB cache |
-| 🧪 **Mock Mode** | Runs fully without API keys using simulated Claude responses |
+| 🔍 **Multi-source Search**        | Queries arXiv and Semantic Scholar in parallel                 |
+| 🕸️ **Citation Graph Analysis**    | NetworkX graph with gap detection via citation density         |
+| 📊 **Interactive Dashboard**      | Vite + React UI with glassmorphic styling                      |
+| 📄 **Export Reports**             | One-click PDF (ReportLab) and DOCX (python-docx) export        |
+| 🛡️ **Offline Resilience**         | Committed fallback dataset + local ChromaDB cache              |
+| 🧪 **Mock Mode**                  | Runs fully without API keys using simulated Claude responses   |
 
 ---
 
@@ -38,16 +38,16 @@ User Query
 
 ### Tech Stack
 
-| Layer | Technology |
-|---|---|
-| **Orchestration** | LangGraph (StateGraph) |
-| **LLM** | Anthropic Claude / Google Gemini |
-| **Vector Store** | ChromaDB |
-| **Graph** | NetworkX |
-| **Backend API** | FastAPI + Uvicorn |
-| **Frontend** | Vite + React (glassmorphic UI) |
-| **PDF Export** | ReportLab |
-| **DOCX Export** | python-docx |
+| Layer             | Technology                       |
+| ----------------- | -------------------------------- |
+| **Orchestration** | LangGraph (StateGraph)           |
+| **LLM**           | Anthropic Claude / Google Gemini |
+| **Vector Store**  | ChromaDB                         |
+| **Graph**         | NetworkX                         |
+| **Backend API**   | FastAPI + Uvicorn                |
+| **Frontend**      | Vite + React (glassmorphic UI)   |
+| **PDF Export**    | ReportLab                        |
+| **DOCX Export**   | python-docx                      |
 
 ---
 
@@ -128,21 +128,25 @@ If Python is not installed, download it from [python.org](https://www.python.org
 A pre-created virtual environment (`venv/`) is already committed at the project root. You do **not** need to run `python -m venv` — just activate it.
 
 **Windows (PowerShell):**
+
 ```powershell
 .\venv\Scripts\Activate.ps1
 ```
 
 > If you get an execution policy error, run this first:
+>
 > ```powershell
 > Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
 > ```
 
 **Windows (Command Prompt):**
+
 ```cmd
 .\venv\Scripts\activate.bat
 ```
 
 **macOS / Linux:**
+
 ```bash
 source venv/bin/activate
 ```
@@ -150,9 +154,11 @@ source venv/bin/activate
 Once activated, your terminal prompt will show `(venv)` as a prefix, confirming the environment is active. All `pip install` and `python` commands from this point will use the isolated environment.
 
 > **If the venv is missing or corrupted**, recreate it from scratch:
+>
 > ```bash
 > python -m venv venv
 > ```
+>
 > Then re-activate and continue with Step 3.
 
 ---
@@ -167,25 +173,26 @@ pip install -r backend/requirements.txt
 
 This installs the following core packages:
 
-| Package | Version | Purpose |
-|---|---|---|
-| `fastapi` | ≥0.100 | REST API framework |
-| `uvicorn` | ≥0.22 | ASGI server for FastAPI |
-| `langgraph` | ≥0.1 | Multi-agent workflow orchestration |
-| `chromadb` | ≥0.4 | Vector store for semantic paper search |
-| `anthropic` | ≥0.8 | Anthropic Claude LLM client |
-| `google-genai` | ≥2.0 | Google Gemini LLM client |
-| `networkx` | ≥3.1 | Citation graph construction & analysis |
-| `pymupdf` | ≥1.22 | PDF text extraction from arXiv papers |
-| `reportlab` | ≥4.0 | PDF report generation |
-| `python-docx` | ≥1.0 | DOCX report generation |
-| `pydantic` | ≥2.0 | Data validation & Pydantic models |
-| `requests` | ≥2.31 | HTTP client for arXiv/Semantic Scholar APIs |
-| `numpy` | ≥1.24 | Numerical operations for graph analysis |
-| `python-dotenv` | ≥1.0 | `.env` file loading |
-| `pytest` | ≥7.3 | Test runner |
+| Package         | Version | Purpose                                     |
+| --------------- | ------- | ------------------------------------------- |
+| `fastapi`       | ≥0.100  | REST API framework                          |
+| `uvicorn`       | ≥0.22   | ASGI server for FastAPI                     |
+| `langgraph`     | ≥0.1    | Multi-agent workflow orchestration          |
+| `chromadb`      | ≥0.4    | Vector store for semantic paper search      |
+| `anthropic`     | ≥0.8    | Anthropic Claude LLM client                 |
+| `google-genai`  | ≥2.0    | Google Gemini LLM client                    |
+| `networkx`      | ≥3.1    | Citation graph construction & analysis      |
+| `pymupdf`       | ≥1.22   | PDF text extraction from arXiv papers       |
+| `reportlab`     | ≥4.0    | PDF report generation                       |
+| `python-docx`   | ≥1.0    | DOCX report generation                      |
+| `pydantic`      | ≥2.0    | Data validation & Pydantic models           |
+| `requests`      | ≥2.31   | HTTP client for arXiv/Semantic Scholar APIs |
+| `numpy`         | ≥1.24   | Numerical operations for graph analysis     |
+| `python-dotenv` | ≥1.0    | `.env` file loading                         |
+| `pytest`        | ≥7.3    | Test runner                                 |
 
 > **Tip**: If you encounter dependency conflicts, try:
+>
 > ```bash
 > pip install -r backend/requirements.txt --upgrade
 > ```
@@ -230,13 +237,14 @@ SEMANTIC_SCHOLAR_API_KEY=your-semantic-scholar-api-key-here
 
 The backend automatically selects the LLM provider based on which key is present and valid:
 
-| Priority | Provider | Key Variable | Model Used |
-|---|---|---|---|
-| 1st | Google Gemini | `GEMINI_API_KEY` | `gemini-2.5-flash` |
-| 2nd | Anthropic Claude | `ANTHROPIC_API_KEY` | `claude-3-5-sonnet` |
-| Fallback | **Mock Mode** | *(neither key set)* | Simulated responses |
+| Priority | Provider         | Key Variable        | Model Used          |
+| -------- | ---------------- | ------------------- | ------------------- |
+| 1st      | Google Gemini    | `GEMINI_API_KEY`    | `gemini-2.5-flash`  |
+| 2nd      | Anthropic Claude | `ANTHROPIC_API_KEY` | `claude-3-5-sonnet` |
+| Fallback | **Mock Mode**    | _(neither key set)_ | Simulated responses |
 
 **Getting API Keys:**
+
 - **Gemini (Free Tier available):** [aistudio.google.com/apikey](https://aistudio.google.com/apikey)
 - **Anthropic Claude:** [console.anthropic.com](https://console.anthropic.com) → API Keys
 - **Semantic Scholar:** [semanticscholar.org/product/api](https://www.semanticscholar.org/product/api)
@@ -263,11 +271,13 @@ python -m uvicorn backend.api.main:app --reload --port 8000
 ```
 
 **What each flag does:**
+
 - `backend.api.main:app` — Python module path to the FastAPI `app` instance
 - `--reload` — Auto-restarts the server when source files change (development mode)
 - `--port 8000` — Binds to port 8000 (must match the frontend's API base URL)
 
 **Expected startup output:**
+
 ```
 INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
 INFO:     Started reloader process
@@ -287,30 +297,31 @@ curl http://localhost:8000/health
 ```
 
 Expected response:
+
 ```json
-{"status": "healthy"}
+{ "status": "healthy" }
 ```
 
 **Useful endpoints:**
 
-| URL | Description |
-|---|---|
-| `http://localhost:8000/health` | Health check — confirms server is up |
-| `http://localhost:8000/docs` | Interactive Swagger UI — explore & test all API routes |
-| `http://localhost:8000/redoc` | ReDoc API documentation |
+| URL                            | Description                                            |
+| ------------------------------ | ------------------------------------------------------ |
+| `http://localhost:8000/health` | Health check — confirms server is up                   |
+| `http://localhost:8000/docs`   | Interactive Swagger UI — explore & test all API routes |
+| `http://localhost:8000/redoc`  | ReDoc API documentation                                |
 
 ---
 
 ### Troubleshooting
 
-| Problem | Likely Cause | Fix |
-|---|---|---|
-| `ModuleNotFoundError: No module named 'backend'` | Running uvicorn from inside `backend/` | Run from the **project root** with `python -m uvicorn backend.api.main:app` |
-| `Address already in use` on port 8000 | Another process using port 8000 | Change port: `--port 8001` or kill the process using `netstat -ano \| findstr :8000` |
-| `chromadb` import error | Missing binary dependency | Run `pip install chromadb --upgrade` |
-| `pymupdf` install fails on Windows | Build tools missing | Install [Microsoft C++ Build Tools](https://visualstudio.microsoft.com/visual-cpp-build-tools/) |
-| Uvicorn not found | venv not activated | Re-run the activation command in Step 2 |
-| LLM key not picked up | `.env` file in wrong location | Ensure `.env` is inside `backend/` (not the project root) |
+| Problem                                          | Likely Cause                           | Fix                                                                                             |
+| ------------------------------------------------ | -------------------------------------- | ----------------------------------------------------------------------------------------------- |
+| `ModuleNotFoundError: No module named 'backend'` | Running uvicorn from inside `backend/` | Run from the **project root** with `python -m uvicorn backend.api.main:app`                     |
+| `Address already in use` on port 8000            | Another process using port 8000        | Change port: `--port 8001` or kill the process using `netstat -ano \| findstr :8000`            |
+| `chromadb` import error                          | Missing binary dependency              | Run `pip install chromadb --upgrade`                                                            |
+| `pymupdf` install fails on Windows               | Build tools missing                    | Install [Microsoft C++ Build Tools](https://visualstudio.microsoft.com/visual-cpp-build-tools/) |
+| Uvicorn not found                                | venv not activated                     | Re-run the activation command in Step 2                                                         |
+| LLM key not picked up                            | `.env` file in wrong location          | Ensure `.env` is inside `backend/` (not the project root)                                       |
 
 ---
 
@@ -356,22 +367,22 @@ This installs the following packages:
 
 **Runtime Dependencies:**
 
-| Package | Version | Purpose |
-|---|---|---|
-| `react` | ^19.2 | Core UI library |
-| `react-dom` | ^19.2 | DOM renderer for React |
-| `cytoscape` | ^3.30 | Interactive citation/similarity graph rendering |
-| `lucide-react` | ^0.400 | Icon library (Search, BookOpen, GitFork, etc.) |
+| Package        | Version | Purpose                                         |
+| -------------- | ------- | ----------------------------------------------- |
+| `react`        | ^19.2   | Core UI library                                 |
+| `react-dom`    | ^19.2   | DOM renderer for React                          |
+| `cytoscape`    | ^3.30   | Interactive citation/similarity graph rendering |
+| `lucide-react` | ^0.400  | Icon library (Search, BookOpen, GitFork, etc.)  |
 
 **Dev Dependencies:**
 
-| Package | Version | Purpose |
-|---|---|---|
-| `vite` | ^8.1 | Lightning-fast build tool & dev server |
-| `@vitejs/plugin-react` | ^6.0 | Vite plugin for React JSX transform |
-| `@types/react` | ^19.2 | TypeScript types for React |
-| `@types/react-dom` | ^19.2 | TypeScript types for React DOM |
-| `oxlint` | ^1.71 | Fast JavaScript/JSX linter |
+| Package                | Version | Purpose                                |
+| ---------------------- | ------- | -------------------------------------- |
+| `vite`                 | ^8.1    | Lightning-fast build tool & dev server |
+| `@vitejs/plugin-react` | ^6.0    | Vite plugin for React JSX transform    |
+| `@types/react`         | ^19.2   | TypeScript types for React             |
+| `@types/react-dom`     | ^19.2   | TypeScript types for React DOM         |
+| `oxlint`               | ^1.71   | Fast JavaScript/JSX linter             |
 
 After install, a `node_modules/` folder will be created inside `frontend/`. This folder is excluded from Git via `.gitignore`.
 
@@ -384,6 +395,7 @@ npm run dev
 ```
 
 **Expected output:**
+
 ```
   VITE v8.x.x  ready in xxx ms
 
@@ -413,12 +425,12 @@ If the dashboard loads but queries fail, check that the backend server is runnin
 
 Run these from inside the `frontend/` directory:
 
-| Script | Command | Description |
-|---|---|---|
-| **Development** | `npm run dev` | Starts Vite dev server with HMR at `localhost:5173` |
-| **Production Build** | `npm run build` | Bundles the app into `frontend/dist/` for deployment |
-| **Preview Build** | `npm run preview` | Serves the production build locally for testing |
-| **Lint** | `npm run lint` | Runs `oxlint` to check for code quality issues |
+| Script               | Command           | Description                                          |
+| -------------------- | ----------------- | ---------------------------------------------------- |
+| **Development**      | `npm run dev`     | Starts Vite dev server with HMR at `localhost:5173`  |
+| **Production Build** | `npm run build`   | Bundles the app into `frontend/dist/` for deployment |
+| **Preview Build**    | `npm run preview` | Serves the production build locally for testing      |
+| **Lint**             | `npm run lint`    | Runs `oxlint` to check for code quality issues       |
 
 ---
 
@@ -443,15 +455,15 @@ The backend is configured with CORS `allow_origins=["*"]`, so no proxy or extra 
 
 ### Troubleshooting
 
-| Problem | Likely Cause | Fix |
-|---|---|---|
-| `npm: command not found` | Node.js not installed | Install Node.js 18+ from [nodejs.org](https://nodejs.org) |
-| `npm install` fails with peer dep errors | Running without `--legacy-peer-deps` | Always use `npm install --legacy-peer-deps` |
-| `ENOENT: no such file or directory, package.json` | Running npm from project root | `cd frontend` first, then run npm commands |
-| Port 5173 already in use | Another Vite instance running | Stop the other server or run `npm run dev -- --port 5174` |
-| App loads but shows "Failed to fetch" | Backend not running | Start the backend on port 8000 first |
-| Graph not rendering | `cytoscape` not installed | Re-run `npm install --legacy-peer-deps` |
-| Blank white screen | Build/JSX error | Open browser DevTools → Console for error details |
+| Problem                                           | Likely Cause                         | Fix                                                       |
+| ------------------------------------------------- | ------------------------------------ | --------------------------------------------------------- |
+| `npm: command not found`                          | Node.js not installed                | Install Node.js 18+ from [nodejs.org](https://nodejs.org) |
+| `npm install` fails with peer dep errors          | Running without `--legacy-peer-deps` | Always use `npm install --legacy-peer-deps`               |
+| `ENOENT: no such file or directory, package.json` | Running npm from project root        | `cd frontend` first, then run npm commands                |
+| Port 5173 already in use                          | Another Vite instance running        | Stop the other server or run `npm run dev -- --port 5174` |
+| App loads but shows "Failed to fetch"             | Backend not running                  | Start the backend on port 8000 first                      |
+| Graph not rendering                               | `cytoscape` not installed            | Re-run `npm install --legacy-peer-deps`                   |
+| Blank white screen                                | Build/JSX error                      | Open browser DevTools → Console for error details         |
 
 ---
 
@@ -484,54 +496,40 @@ ScholarGraph is designed to remain usable even without live API access:
 - **Local Caching**: The search agent caches all API responses under `backend/db/cache/`. Repeated queries are served from the cache instantly.
 - **Committed Fallback Dataset**: If the system is fully offline or rate-limited, it automatically falls back to:
   - `fallback_dataset/cache/` — pre-fetched paper search results
-  - `fallback_dataset/results_attention_mechanisms.json` — a complete pre-computed pipeline result for the query *"attention mechanisms"*
+  - `fallback_dataset/results_attention_mechanisms.json` — a complete pre-computed pipeline result for the query _"attention mechanisms"_
 
 ---
 
 ## 📦 Python Dependencies
 
-| Package | Purpose |
-|---|---|
-| `fastapi` | REST API framework |
-| `uvicorn` | ASGI server |
-| `langgraph` | Multi-agent workflow orchestration |
-| `chromadb` | Vector store for semantic search |
-| `anthropic` | Claude LLM client |
-| `google-genai` | Gemini LLM client |
-| `networkx` | Citation graph construction & analysis |
-| `reportlab` | PDF report generation |
-| `python-docx` | DOCX report generation |
-| `pydantic` | Data validation & models |
-| `requests` | HTTP client for arXiv/Semantic Scholar |
-| `python-dotenv` | Environment variable loading |
-| `pytest` | Test runner |
+| Package         | Purpose                                |
+| --------------- | -------------------------------------- |
+| `fastapi`       | REST API framework                     |
+| `uvicorn`       | ASGI server                            |
+| `langgraph`     | Multi-agent workflow orchestration     |
+| `chromadb`      | Vector store for semantic search       |
+| `anthropic`     | Claude LLM client                      |
+| `google-genai`  | Gemini LLM client                      |
+| `networkx`      | Citation graph construction & analysis |
+| `reportlab`     | PDF report generation                  |
+| `python-docx`   | DOCX report generation                 |
+| `pydantic`      | Data validation & models               |
+| `requests`      | HTTP client for arXiv/Semantic Scholar |
+| `python-dotenv` | Environment variable loading           |
+| `pytest`        | Test runner                            |
 
 ---
 
 ## 🗺️ Frontend Components
 
-| Component | Description |
-|---|---|
-| `QueryForm` | Research topic input, year range, domain, and max-papers filters |
+| Component         | Description                                                                 |
+| ----------------- | --------------------------------------------------------------------------- |
+| `QueryForm`       | Research topic input, year range, domain, and max-papers filters            |
 | `ProgressTracker` | Real-time display of each agent's status (pending / running / done / error) |
-| `OverviewPanel` | High-level summary cards and identified gap claim tiles |
-| `ComparisonTable` | Sortable, searchable paper comparison matrix |
-| `GraphViewer` | Interactive citation/similarity graph with force-directed layout |
-| `SourcesSidebar` | Detailed sidebar for individual paper metadata and abstracts |
-| `ReportExport` | One-click PDF and DOCX export with preview |
+| `OverviewPanel`   | High-level summary cards and identified gap claim tiles                     |
+| `ComparisonTable` | Sortable, searchable paper comparison matrix                                |
+| `GraphViewer`     | Interactive citation/similarity graph with force-directed layout            |
+| `SourcesSidebar`  | Detailed sidebar for individual paper metadata and abstracts                |
+| `ReportExport`    | One-click PDF and DOCX export with preview                                  |
 
 ---
-
-## 🤝 Contributing
-
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/your-feature`)
-3. Commit your changes (`git commit -m 'Add your feature'`)
-4. Push to the branch (`git push origin feature/your-feature`)
-5. Open a Pull Request
-
----
-
-## 📄 License
-
-This project is developed as an academic research tool. See [LICENSE](LICENSE) for details.
