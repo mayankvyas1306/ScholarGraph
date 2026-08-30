@@ -7,7 +7,7 @@ from typing import List, Dict, Any, Tuple
 from backend.clients.llm_client import LLMClient
 from backend.data.models import PaperMeta, FieldRecord
 
-logger = logging.getLogger("researchmind.extraction")
+logger = logging.getLogger("scholargraph.extraction")
 
 # Canonical blank/useless values to detect. Moved above verify_grounding
 # (which now also reads this set) so it's defined before first use in
@@ -383,7 +383,7 @@ def run_extraction(state: dict) -> dict:
         if paper.pdf_url and paper.full_text_available:
             logger.info(f"Attempting to download PDF for '{paper.title}' from {paper.pdf_url}")
             try:
-                headers = {"User-Agent": "Mozilla/5.0 (compatible; ResearchMindBot/1.0)"}
+                headers = {"User-Agent": "Mozilla/5.0 (compatible; ScholarGraphBot/1.0)"}
                 response = requests.get(paper.pdf_url, headers=headers, timeout=20)
 
                 # Verify it is a valid PDF

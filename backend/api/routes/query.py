@@ -7,7 +7,7 @@ from typing import Dict, Any, Optional, List
 from backend.api.jobs import jobs
 from backend.orchestration.pipeline import app as pipeline_app, create_initial_state
 
-logger = logging.getLogger("researchmind.api.query")
+logger = logging.getLogger("scholargraph.api.query")
 router = APIRouter()
 
 

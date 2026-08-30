@@ -9,7 +9,7 @@ from reportlab.lib import colors
 from backend.data.models import PaperMeta, GapClaim, Summary
 from backend.clients.llm_client import LLMClient
 
-logger = logging.getLogger("researchmind.report")
+logger = logging.getLogger("scholargraph.report")
 
 def generate_introduction(query: str, summaries: List[Summary], gap_claims: List[GapClaim]) -> str:
     """
@@ -251,7 +251,7 @@ def compile_markdown_draft(
         gap_narratives = []
 
     intro = (
-        f"# ResearchMind Literature Review Report\n\n"
+        f"# ScholarGraph Literature Review Report\n\n"
         f"**Research Topic:** {query}\n\n"
         f"## 1. Introduction\n\n"
         f"{introduction_text}\n"
@@ -304,7 +304,7 @@ def generate_docx(
     doc = docx.Document()
 
     # Title
-    doc.add_heading("ResearchMind Literature Review & Gap Analysis", 0)
+    doc.add_heading("ScholarGraph Literature Review & Gap Analysis", 0)
     doc.add_paragraph(f"Focus Topic: {query}").bold = True
 
     # Section 1: Introduction

@@ -4,7 +4,7 @@ from fastapi import APIRouter, HTTPException, Query
 from fastapi.responses import FileResponse
 from backend.api.jobs import jobs
 
-logger = logging.getLogger("researchmind.api.export")
+logger = logging.getLogger("scholargraph.api.export")
 router = APIRouter()
 
 @router.get("/export/{job_id}")
@@ -30,7 +30,7 @@ def export_report(job_id: str, format: str = Query("pdf", pattern="^(pdf|docx)$"
         raise HTTPException(status_code=404, detail=f"Report file in {format.upper()} format was not generated.")
         
     # Return FileResponse with custom download filename
-    filename = f"ResearchMind_Report_{job_id[:8]}.{format}"
+    filename = f"ScholarGraph_Report_{job_id[:8]}.{format}"
     media_type = "application/pdf" if format == "pdf" else "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
     
     return FileResponse(

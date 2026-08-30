@@ -4,7 +4,7 @@ import numpy as np
 from typing import List, Dict, Any, Optional
 import logging
 
-logger = logging.getLogger("researchmind.vector_store")
+logger = logging.getLogger("scholargraph.vector_store")
 
 class VectorStore:
     def __init__(self, db_path: Optional[str] = None):
@@ -27,13 +27,13 @@ class VectorStore:
             self.embedding_function(["test text"])
             logger.info("ChromaDB default embedding function initialized successfully.")
             self.collection = self.client.get_or_create_collection(
-                name="researchmind_papers",
+                name="scholargraph_papers",
                 embedding_function=self.embedding_function
             )
             self._use_fallback_embeddings = False
         except Exception as e:
             logger.warning(f"Could not load default embedding function ({e}). Falling back to simple TF-IDF/Hash embeddings.")
-            self.collection = self.client.get_or_create_collection(name="researchmind_papers")
+            self.collection = self.client.get_or_create_collection(name="scholargraph_papers")
             self._use_fallback_embeddings = True
 
     def _generate_fallback_embedding(self, text: str) -> List[float]:

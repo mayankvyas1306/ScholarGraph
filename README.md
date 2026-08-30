@@ -54,7 +54,7 @@ User Query
 ## 📁 Repository Structure
 
 ```
-Research-Mind/
+ScholarGraph/
 ├── backend/
 │   ├── api/                  # FastAPI server, routes & SSE streaming
 │   ├── agents/               # 6-agent pipeline stages

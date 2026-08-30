@@ -2,7 +2,7 @@ import json
 from backend.clients.llm_client import LLMClient
 import logging
 
-logger = logging.getLogger("researchmind.planner")
+logger = logging.getLogger("scholargraph.planner")
 
 
 def run_planner(state: dict) -> dict:

@@ -5,7 +5,7 @@ from backend.data.models import PaperMeta
 from backend.data.vector_store import VectorStore
 import numpy as np
 
-logger = logging.getLogger("researchmind.data.graph_store")
+logger = logging.getLogger("scholargraph.data.graph_store")
 
 def compute_cosine_similarity(v1: List[float], v2: List[float]) -> float:
     if not v1 or not v2:

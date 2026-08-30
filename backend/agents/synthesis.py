@@ -4,7 +4,7 @@ from typing import List, Dict, Any
 from backend.clients.llm_client import LLMClient
 from backend.data.models import PaperMeta, FieldRecord, Summary
 
-logger = logging.getLogger("researchmind.synthesis")
+logger = logging.getLogger("scholargraph.synthesis")
 
 
 def run_synthesis(state: dict) -> dict:
