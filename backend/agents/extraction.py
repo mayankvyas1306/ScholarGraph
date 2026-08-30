@@ -4,10 +4,27 @@ import requests
 import json
 import logging
 from typing import List, Dict, Any, Tuple
-from backend.clients.claude_client import ClaudeClient
+from backend.clients.llm_client import LLMClient
 from backend.data.models import PaperMeta, FieldRecord
 
 logger = logging.getLogger("scholargraph.extraction")
+
+# Canonical blank/useless values to detect. Moved above verify_grounding
+# (which now also reads this set) so it's defined before first use in
+# reading order; Python only needs it to exist by call time, but this keeps
+# the file readable top-to-bottom.
+_BLANK_VALUES = {
+    "not available", "not specified", "n/a", "none", "unknown",
+    "not mentioned", "not stated", "not provided", "not given",
+    "not reported", "not applicable", "no limitation mentioned",
+    "not explicitly mentioned", "not explicitly stated",
+}
+
+def _is_blank(val: str) -> bool:
+    """Returns True if an extracted value is effectively empty/useless."""
+    if not val:
+        return True
+    return val.strip().lower() in _BLANK_VALUES or len(val.strip()) < 5
 
 
 def extract_text_from_pdf(pdf_bytes: bytes) -> str:
@@ -50,7 +67,17 @@ def verify_grounding(extracted: Dict[str, str], text: str, abstract_only: bool) 
     for f in fields_to_check:
         val = extracted.get(f, "").strip()
 
-        if not val or val.lower() in ["not specified", "none", "n/a", "unknown", "not mentioned"]:
+        # Match against the canonical `_BLANK_VALUES` set (string equality
+        # only — no length heuristic, unlike `_is_blank`, so short-but-valid
+        # values like "BERT" or "GPT-2" still go through verification below).
+        # The previous local list here didn't include "not available" — the
+        # exact placeholder FULL_TEXT_PROMPT/ABSTRACT_ONLY_PROMPT instruct
+        # the LLM to write when a field has zero evidence — so a correctly
+        # "blank" field fell through to the quote-check below, found no
+        # supporting quote (there isn't one), and incorrectly marked the
+        # whole record "failed" instead of being treated as an acceptable
+        # gap.
+        if not val or val.lower() in _BLANK_VALUES:
             notes.append(f"Field '{f}': not found in text (acceptable).")
             continue
 
@@ -154,20 +181,6 @@ Return ONLY a valid JSON object:
   "key_metric": "...",
   "limitation": "..."
 }}"""
-
-# Canonical blank/useless values to detect
-_BLANK_VALUES = {
-    "not available", "n/a", "none", "unknown",
-    "not mentioned", "not stated", "not provided", "not given",
-    "not reported", "not applicable", "no limitation mentioned",
-    "not explicitly mentioned", "not explicitly stated",
-}
-
-def _is_blank(val: str) -> bool:
-    """Returns True if an extracted value is effectively empty/useless."""
-    if not val:
-        return True
-    return val.strip().lower() in _BLANK_VALUES or len(val.strip()) < 5
 
 
 def _parse_json_from_llm(text: str) -> dict:
@@ -348,7 +361,7 @@ Return ONLY a valid JSON object with exactly these keys:
 
 def run_extraction(state: dict) -> dict:
     """
-    Downloads PDFs, extracts text, queries Claude to extract methodology fields,
+    Downloads PDFs, extracts text, queries the LLM to extract methodology fields,
     and runs a verification pass. Uses separate prompts for full-text vs abstract-only mode.
     """
     papers: List[PaperMeta] = state.get("papers", [])
@@ -360,7 +373,7 @@ def run_extraction(state: dict) -> dict:
     logger.info(f"Extraction Agent: Processing {len(papers)} papers.")
 
     extracted_records = []
-    claude = ClaudeClient()
+    llm = LLMClient()
 
     for paper in papers:
         paper_text = ""
@@ -403,7 +416,7 @@ def run_extraction(state: dict) -> dict:
 
         # 3. LLM Extraction
         try:
-            response_text = claude.complete(
+            response_text = llm.complete(
                 prompt=prompt,
                 system=(
                     "You are an expert academic research analyst. "
@@ -444,7 +457,7 @@ def run_extraction(state: dict) -> dict:
                     json_fields=json_fields_text,
                 )
                 try:
-                    inf_resp = claude.complete(
+                    inf_resp = llm.complete(
                         prompt=inf_prompt,
                         system="You are an expert academic researcher. Give specific, direct answers.",
                         temperature=0.1

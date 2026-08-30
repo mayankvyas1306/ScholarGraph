@@ -114,6 +114,7 @@ def search_semantic_scholar(
 
             papers.append({
                 "id": p_id,
+                "s2_paper_id": paper_id,  # raw S2 id — citations/references are expressed in this space
                 "arxiv_id": arxiv_id,
                 "title": item.get("title", "Untitled"),
                 "abstract": item.get("abstract", "") or "",
