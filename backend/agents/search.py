@@ -47,12 +47,17 @@ def run_search(state: dict) -> dict:
     state["agent_status"]["search"] = "running"
     logger.info(f"Search Agent: Retrieving papers for sub-queries: {sub_queries}")
 
-    # Extract year range filters from pipeline state
+    # Extract filters from pipeline state
     filters = state.get("filters", {}) or {}
     year_range = filters.get("year_range", [None, None]) or [None, None]
     year_from = year_range[0] if len(year_range) > 0 else None
     year_to   = year_range[1] if len(year_range) > 1 else None
-    logger.info(f"Search Agent: Applying year filter {year_from}–{year_to}")
+    venue_type = (filters.get("venue_type") or "any").strip().lower()
+    keywords = [k.strip().lower() for k in (filters.get("keywords") or []) if k and k.strip()]
+    logger.info(
+        f"Search Agent: Applying year filter {year_from}–{year_to}, "
+        f"venue_type={venue_type!r}, keywords={keywords}"
+    )
     
     raw_results = []
     
@@ -129,7 +134,44 @@ def run_search(state: dict) -> dict:
                 source=raw["source"]
             )
             deduped_papers.append(paper_meta)
-            
+
+    # 2b. Apply venue_type filter (best-effort heuristic — the source APIs
+    # don't reliably distinguish conference vs. journal publications).
+    if venue_type and venue_type != "any":
+        before = len(deduped_papers)
+        if venue_type == "arxiv":
+            deduped_papers = [
+                p for p in deduped_papers
+                if p.arxiv_id or p.source in ("arxiv", "merged")
+            ]
+        elif venue_type == "workshop":
+            deduped_papers = [
+                p for p in deduped_papers
+                if "workshop" in (p.venue or "").lower()
+            ]
+        elif venue_type in ("conference", "journal"):
+            # Heuristic: treat anything with a known, non-arXiv venue as
+            # peer-reviewed. We can't reliably split conference vs. journal
+            # from the metadata the APIs give us.
+            deduped_papers = [
+                p for p in deduped_papers
+                if (p.venue or "").strip().lower() not in ("", "unknown", "arxiv")
+            ]
+        logger.info(
+            f"Search Agent: venue_type={venue_type!r} filter kept "
+            f"{len(deduped_papers)}/{before} papers."
+        )
+
+    # 2c. Apply keyword filter — keep papers whose title or abstract
+    # mentions at least one of the requested keywords.
+    if keywords:
+        before = len(deduped_papers)
+        deduped_papers = [
+            p for p in deduped_papers
+            if any(kw in f"{p.title} {p.abstract}".lower() for kw in keywords)
+        ]
+        logger.info(f"Search Agent: keyword filter kept {len(deduped_papers)}/{before} papers.")
+
     # 3. Store in ChromaDB
     try:
         vs = VectorStore()

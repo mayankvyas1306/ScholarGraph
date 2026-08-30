@@ -9,7 +9,11 @@ logger = logging.getLogger("researchmind.s2")
 # Fields to retrieve from Semantic Scholar API
 # Added openAccessPdf to get direct open-access PDF links
 # Added url to get the Semantic Scholar paper page URL
-S2_FIELDS = "title,authors,year,venue,abstract,externalIds,citationCount,citations,openAccessPdf,url"
+# NOTE: Semantic Scholar's "citations" field returns papers that cite THIS
+# paper (incoming), while "references" returns papers THIS paper cites
+# (outgoing). Our graph needs outgoing edges (p CITES cited_id), so we must
+# request/use "references", not "citations".
+S2_FIELDS = "title,authors,year,venue,abstract,externalIds,citationCount,references,openAccessPdf,url"
 
 @exponential_backoff(max_retries=5, base_delay=3.0)
 def _fetch_s2_raw(url: str, params: Dict[str, Any], headers: Dict[str, str]) -> Dict[str, Any]:
@@ -83,12 +87,13 @@ def search_semantic_scholar(
 
             authors = [author.get("name") for author in item.get("authors", []) if author.get("name")]
 
-            # Citations list (citations of this paper)
+            # References list = papers THIS paper cites (outgoing edges).
+            # (Do not use the "citations" field here — that's incoming.)
             citations_list = []
-            for cit in item.get("citations", []):
-                cit_id = cit.get("paperId")
-                if cit_id:
-                    citations_list.append(cit_id)
+            for ref in item.get("references", []):
+                ref_id = ref.get("paperId")
+                if ref_id:
+                    citations_list.append(ref_id)
 
             # Prefer open-access PDF URL, then arXiv PDF, then None
             open_access = item.get("openAccessPdf") or {}

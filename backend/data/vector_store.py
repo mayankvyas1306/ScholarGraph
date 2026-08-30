@@ -1,4 +1,5 @@
 import os
+import hashlib
 import numpy as np
 from typing import List, Dict, Any, Optional
 import logging
@@ -37,11 +38,19 @@ class VectorStore:
 
     def _generate_fallback_embedding(self, text: str) -> List[float]:
         """
-        Fallback embedding generator using hashing and numpy. 
+        Fallback embedding generator using hashing and numpy.
         Produces a consistent 384-dimensional unit vector from text.
+
+        Uses hashlib (not Python's built-in hash()) as the seed source:
+        built-in hash() is randomized per-process via PYTHONHASHSEED, so
+        the same text would previously produce a different vector after
+        every server restart, silently breaking similarity search across
+        restarts of a persistent Chroma store.
         """
         dim = 384
-        state = np.random.RandomState(abs(hash(text)) % (2**32))
+        digest = hashlib.md5(text.encode("utf-8")).hexdigest()
+        seed = int(digest, 16) % (2**32)
+        state = np.random.RandomState(seed)
         vec = state.randn(dim)
         norm = np.linalg.norm(vec)
         if norm > 0:
