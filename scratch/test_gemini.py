@@ -23,36 +23,28 @@ if os.path.exists(env_path):
                     continue
                 os.environ[k] = v
 
-from backend.clients.claude_client import ClaudeClient
+# NOTE: this script used to import `backend.clients.claude_client.ClaudeClient`,
+# a pre-LangChain-migration client that called `google.genai` directly and
+# has since been removed as dead code (nothing in the actual app imported
+# it any more; see backend/clients/llm_provider.py + llm_client.py for the
+# current, provider-agnostic LangChain-backed client). Updated to use the
+# real client the app uses so this script stays a meaningful diagnostic.
+from backend.clients.llm_client import LLMClient
 
 def test_connection():
     print("Initializing client...")
-    client = ClaudeClient()
-    
+    client = LLMClient()
+
     print(f"Detected Provider: {client.provider}")
-    
+
     if client.provider == "mock":
-        print("WARNING: Client is running in Mock Mode. Please double check that GEMINI_API_KEY is correctly set in backend/.env")
+        print("WARNING: Client is running in Mock Mode. Please double check that "
+              "GEMINI_API_KEY (or ANTHROPIC_API_KEY / OPENAI_API_KEY) is correctly "
+              "set in backend/.env.")
         return
-        
-    print("Sending prompt to Gemini API...")
+
+    print(f"Testing text generation via provider '{client.provider}'...")
     try:
-        import google.generativeai as genai
-        genai.configure(api_key=client.gemini_key)
-        print("Checking accessible models for this API key:")
-        models = [m.name for m in genai.list_models()]
-        print(f"Accessible Models: {models}")
-        
-        # Try a basic model if gemini-pro is not found
-        model_to_use = "gemini-pro"
-        if "models/gemini-1.5-flash" in models:
-            model_to_use = "gemini-1.5-flash"
-        elif "models/gemini-pro" in models:
-            model_to_use = "gemini-pro"
-        else:
-            model_to_use = models[0] if models else "gemini-pro"
-            
-        print(f"Testing text generation with model: {model_to_use}...")
         response = client.complete(
             prompt="Decompose the following research topic into 3 sub-queries: 'quantum error correction'",
             system="You are a planning assistant."
@@ -60,13 +52,14 @@ def test_connection():
         print("\n--- API Response Success ---")
         print(response)
         print("----------------------------\n")
-        print("Your Gemini API key is active and working perfectly!")
+        print(f"Your {client.provider} API key is active and working perfectly!")
     except Exception as e:
         print(f"\nAPI Call Failed: {e}")
-        print("\nPossible Reason:")
-        print("1. If you get a '404 model not found' or 'API key not valid' error, it means the API key lacks permissions for the Generative Language API.")
-        print("2. Please visit Google AI Studio (https://aistudio.google.com/) and create a free Gemini API Key there. AI Studio keys work automatically.")
-        print("3. Alternatively, if using Google Cloud Console, ensure you have enabled the 'Generative Language API' for this API key's project.")
+        print("\nPossible Reasons:")
+        print("1. The API key lacks permissions, has expired, or is for the wrong project.")
+        print("2. For Gemini: create a free key at https://aistudio.google.com/apikey — AI Studio keys work automatically.")
+        print("3. For Anthropic: create a key at https://console.anthropic.com/ -> API Keys.")
+        print("4. Check LLM_PROVIDER / LLM_MODEL in backend/.env if you're explicitly pinning a provider or model.")
 
 if __name__ == "__main__":
     test_connection()
