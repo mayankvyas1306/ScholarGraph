@@ -38,7 +38,7 @@ def test_verify_grounding_failure():
 
 @patch('backend.agents.extraction.requests.get')
 @patch('backend.agents.extraction.fitz.open')
-@patch('backend.clients.claude_client.ClaudeClient.complete')
+@patch('backend.clients.llm_client.LLMClient.complete')
 def test_extraction_agent_flow(mock_complete, mock_fitz_open, mock_get):
     """
     Test extraction agent end-to-end with mocked PDF download, parsing, and LLM responses.

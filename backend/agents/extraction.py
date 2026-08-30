@@ -4,7 +4,7 @@ import requests
 import json
 import logging
 from typing import List, Dict, Any, Tuple
-from backend.clients.claude_client import ClaudeClient
+from backend.clients.llm_client import LLMClient
 from backend.data.models import PaperMeta, FieldRecord
 
 logger = logging.getLogger("researchmind.extraction")
@@ -348,7 +348,7 @@ Return ONLY a valid JSON object with exactly these keys:
 
 def run_extraction(state: dict) -> dict:
     """
-    Downloads PDFs, extracts text, queries Claude to extract methodology fields,
+    Downloads PDFs, extracts text, queries the LLM to extract methodology fields,
     and runs a verification pass. Uses separate prompts for full-text vs abstract-only mode.
     """
     papers: List[PaperMeta] = state.get("papers", [])
@@ -360,7 +360,7 @@ def run_extraction(state: dict) -> dict:
     logger.info(f"Extraction Agent: Processing {len(papers)} papers.")
 
     extracted_records = []
-    claude = ClaudeClient()
+    llm = LLMClient()
 
     for paper in papers:
         paper_text = ""
@@ -403,7 +403,7 @@ def run_extraction(state: dict) -> dict:
 
         # 3. LLM Extraction
         try:
-            response_text = claude.complete(
+            response_text = llm.complete(
                 prompt=prompt,
                 system=(
                     "You are an expert academic research analyst. "
@@ -444,7 +444,7 @@ def run_extraction(state: dict) -> dict:
                     json_fields=json_fields_text,
                 )
                 try:
-                    inf_resp = claude.complete(
+                    inf_resp = llm.complete(
                         prompt=inf_prompt,
                         system="You are an expert academic researcher. Give specific, direct answers.",
                         temperature=0.1

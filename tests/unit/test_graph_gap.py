@@ -49,7 +49,7 @@ def test_graph_gap_agent_insufficient_data():
     assert len(updated_state["gap_claims"]) == 0
     assert updated_state["graph_ref"] is None
 
-@patch('backend.clients.claude_client.ClaudeClient.complete')
+@patch('backend.clients.llm_client.LLMClient.complete')
 def test_graph_gap_agent_flow_fallback(mock_complete):
     """
     Test graph/gap agent flow when LLM call fails, checking keyword clustering and NetworkX graph construction.
