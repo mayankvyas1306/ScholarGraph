@@ -23,10 +23,14 @@ app = FastAPI(
 )
 
 # CORS configuration for local React development frontend
+# NOTE: allow_origins=["*"] combined with allow_credentials=True is invalid
+# per the CORS spec — browsers will refuse credentialed requests against a
+# wildcard origin. Since this API doesn't rely on cookies/credentials, we
+# turn credentials off instead of enumerating explicit origins.
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # Renders sandbox/local access easy
-    allow_credentials=True,
+    allow_origins=["*"],
+    allow_credentials=False,
     allow_methods=["*"],
     allow_headers=["*"],
 )
@@ -46,12 +50,16 @@ def get_job_status(job_id: str):
     job = jobs[job_id]
     state = job["state"]
     
-    # Extract agent status list from state if initialized
+    # Extract agent status from state. Now that the pipeline is executed via
+    # pipeline_app.stream() (see execute_pipeline in routes/query.py), the
+    # job's state — and therefore agent_status — is updated after every
+    # single agent completes, so this reflects real, live progress instead
+    # of a guess.
     agent_status = {}
     if state and "agent_status" in state:
         agent_status = state["agent_status"]
     else:
-        # Default fallback pending states
+        # Job accepted but the background task hasn't written state yet.
         agent_status = {
             "planner": "pending",
             "search": "pending",
@@ -60,8 +68,6 @@ def get_job_status(job_id: str):
             "graph_gap": "pending",
             "report": "pending"
         }
-        if job["status"] == "running":
-            agent_status["planner"] = "running"
             
     return {
         "status": job["status"],

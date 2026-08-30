@@ -122,7 +122,8 @@ export default function GraphViewer({ gapClaims, onHighlightPapers }) {
           type:      node.type || 'Paper',
           fullTitle: node.title || node.name || node.label || node.id,
           year:      node.year,
-          citations: node.citations,
+          // GraphStore puts this on paper nodes as "citation_count", not "citations"
+          citations: node.citation_count,
         },
       });
     });

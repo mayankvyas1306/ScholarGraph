@@ -316,14 +316,15 @@ def generate_docx(
 
     # Section 2: Comparison Table
     doc.add_heading("2. Comparison Matrix", level=1)
-    table = doc.add_table(rows=1, cols=5)
+    table = doc.add_table(rows=1, cols=6)
     table.style = 'Light Shading Accent 1'
     hdr_cells = table.rows[0].cells
     hdr_cells[0].text = 'Title'
     hdr_cells[1].text = 'Year'
     hdr_cells[2].text = 'Method'
     hdr_cells[3].text = 'Dataset'
-    hdr_cells[4].text = 'Limitation'
+    hdr_cells[4].text = 'Key Metric'
+    hdr_cells[5].text = 'Limitation'
 
     for row in comparison_table:
         row_cells = table.add_row().cells
@@ -331,7 +332,8 @@ def generate_docx(
         row_cells[1].text = str(row['year'])
         row_cells[2].text = row['method']
         row_cells[3].text = row['dataset']
-        row_cells[4].text = row['limitation']
+        row_cells[4].text = row.get('key_metric', 'N/A')
+        row_cells[5].text = row['limitation']
 
     # Section 3: Thematic Synthesis
     doc.add_heading("3. Thematic Literature Survey & Synthesis", level=1)
@@ -436,6 +438,7 @@ def generate_pdf(
         Paragraph("Year", table_hdr_style),
         Paragraph("Method", table_hdr_style),
         Paragraph("Dataset", table_hdr_style),
+        Paragraph("Key Metric", table_hdr_style),
         Paragraph("Limitation", table_hdr_style),
     ]]
     for row in comparison_table:
@@ -445,9 +448,10 @@ def generate_pdf(
             Paragraph(str(row['year']), table_cell_style),
             Paragraph(row['method'], table_cell_style),
             Paragraph(row['dataset'], table_cell_style),
+            Paragraph(row.get('key_metric', 'N/A'), table_cell_style),
             Paragraph(row['limitation'], table_cell_style),
         ])
-    t = Table(data, colWidths=[145, 35, 110, 110, 115])
+    t = Table(data, colWidths=[120, 30, 90, 90, 90, 90])
     t.setStyle(TableStyle([
         ('BACKGROUND',    (0, 0), (-1, 0),  colors.HexColor('#1E293B')),
         ('ALIGN',         (0, 0), (-1, -1), 'LEFT'),
@@ -533,12 +537,16 @@ def run_report(state: dict) -> dict:
     }
 
     # 3. Write output files
+    # Use the job_id in the filename so concurrent/sequential jobs never
+    # overwrite each other's report on disk (previously both jobs wrote to
+    # the same "report.pdf" / "report.docx" path).
+    job_id = state.get("job_id") or "unknown"
     base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     exports_dir = os.path.join(base_dir, "db", "exports")
     os.makedirs(exports_dir, exist_ok=True)
 
-    pdf_path  = os.path.join(exports_dir, "report.pdf")
-    docx_path = os.path.join(exports_dir, "report.docx")
+    pdf_path  = os.path.join(exports_dir, f"report_{job_id}.pdf")
+    docx_path = os.path.join(exports_dir, f"report_{job_id}.docx")
 
     try:
         generate_docx(

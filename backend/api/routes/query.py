@@ -25,13 +25,21 @@ def execute_pipeline(job_id: str, query: str, filters: Dict[str, Any]):
     """
     logger.info(f"Starting pipeline execution for job {job_id}")
     try:
-        initial_state = create_initial_state(query, filters)
+        initial_state = create_initial_state(query, filters, job_id=job_id)
         jobs[job_id]["state"] = initial_state
         jobs[job_id]["status"] = "running"
-        
-        # Invoke LangGraph
-        final_state = pipeline_app.invoke(initial_state)
-        
+
+        # Stream the pipeline node-by-node (instead of a single blocking
+        # `.invoke()`) so jobs[job_id]["state"]["agent_status"] is updated
+        # after each agent finishes. Previously the job state was only
+        # written once at the start and once at the end, so /status polling
+        # mid-run had no real progress to report and had to guess.
+        final_state = initial_state
+        for step_output in pipeline_app.stream(initial_state):
+            for _node_name, node_state in step_output.items():
+                final_state = node_state
+                jobs[job_id]["state"] = node_state
+
         jobs[job_id]["state"] = final_state
         jobs[job_id]["status"] = "done"
         logger.info(f"Pipeline execution completed successfully for job {job_id}")

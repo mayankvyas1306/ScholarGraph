@@ -153,7 +153,7 @@ export default function QAAssistant({ jobId, isDone }) {
                           className="qa-citation-link"
                           title={paper.title}
                         >
-                          [{pIdx + 1}] {paper.title.substring(0, 45)}...
+                          [{pIdx + 1}] {paper.title.length > 45 ? `${paper.title.substring(0, 45)}...` : paper.title}
                         </a>
                       ))}
                     </div>

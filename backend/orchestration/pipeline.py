@@ -10,6 +10,7 @@ from backend.agents.report import run_report
 
 # Define the orchestration state matching the contract in PRD/SRS
 class PipelineState(TypedDict):
+    job_id: str
     query: str
     filters: Dict[str, Any]
     sub_queries: List[str]
@@ -45,7 +46,7 @@ workflow.add_edge("report", END)
 # 4. Compile the state machine
 app = workflow.compile()
 
-def create_initial_state(query: str, filters: Dict[str, Any] = None) -> PipelineState:
+def create_initial_state(query: str, filters: Dict[str, Any] = None, job_id: str = None) -> PipelineState:
     """
     Creates a new, initialized state dictionary for a pipeline job.
     """
@@ -53,6 +54,7 @@ def create_initial_state(query: str, filters: Dict[str, Any] = None) -> Pipeline
         filters = {}
         
     return {
+        "job_id": job_id,
         "query": query,
         "filters": filters,
         "sub_queries": [],
