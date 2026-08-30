@@ -16,6 +16,10 @@ class PaperMeta(BaseModel):
     doi: Optional[str] = None
     arxiv_id: Optional[str] = None
     source: str  # 'arxiv', 'semantic_scholar', or 'merged'
+    s2_paper_id: Optional[str] = None  # Raw Semantic Scholar paperId, kept
+    # separately from `id` (which prefers DOI) so that `citations` — which
+    # Semantic Scholar always expresses in terms of paperId — can be
+    # translated back to whatever `id` a cited paper ended up with.
 
 class FieldRecord(BaseModel):
     paper_id: str

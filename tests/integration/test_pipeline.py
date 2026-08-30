@@ -6,7 +6,7 @@ from backend.orchestration.pipeline import app, create_initial_state
 @patch('backend.agents.search.search_semantic_scholar')
 @patch('backend.agents.extraction.requests.get')
 @patch('backend.agents.extraction.fitz.open')
-@patch('backend.clients.claude_client.ClaudeClient.complete')
+@patch('backend.clients.llm_client.LLMClient.complete')
 def test_full_pipeline_mocked(mock_complete, mock_fitz_open, mock_get, mock_s2, mock_arxiv):
     """
     Test the entire 6-agent LangGraph pipeline end-to-end using mocked outputs.

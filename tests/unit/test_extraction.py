@@ -19,7 +19,7 @@ def test_verify_grounding_success():
         "limitation_quote": "due to the quadratic scaling cost"
     }
     text = "We propose a new model called Transformer on the Wikitext-103 dataset which achieves BLEU of 28.4 due to the quadratic scaling cost."
-    status, notes = verify_grounding(extracted, text)
+    status, notes = verify_grounding(extracted, text, abstract_only=False)
     assert status == "verified"
     assert "verified" in notes
 
@@ -32,13 +32,16 @@ def test_verify_grounding_failure():
         "method_quote": "Not in the text at all"
     }
     text = "We propose a new model called Transformer."
-    status, notes = verify_grounding(extracted, text)
+    status, notes = verify_grounding(extracted, text, abstract_only=False)
     assert status == "failed"
-    assert "verification failed" in notes
+    # verify_grounding's actual message for a non-matching quote is
+    # "quote not found in full text" (the test previously asserted a
+    # "verification failed" substring that verify_grounding never emits).
+    assert "quote not found in full text" in notes
 
 @patch('backend.agents.extraction.requests.get')
 @patch('backend.agents.extraction.fitz.open')
-@patch('backend.clients.claude_client.ClaudeClient.complete')
+@patch('backend.clients.llm_client.LLMClient.complete')
 def test_extraction_agent_flow(mock_complete, mock_fitz_open, mock_get):
     """
     Test extraction agent end-to-end with mocked PDF download, parsing, and LLM responses.
@@ -83,6 +86,15 @@ def test_extraction_agent_flow(mock_complete, mock_fitz_open, mock_get):
             venue="NeurIPS",
             abstract="We propose the Transformer...",
             pdf_url="http://example.com/test.pdf",
+            # run_extraction only attempts a PDF download when both pdf_url
+            # AND full_text_available are set — full_text_available defaults
+            # to False on PaperMeta, so without this the mocked
+            # requests.get/fitz.open above are never exercised and the
+            # agent silently falls back to abstract-only mode, which is not
+            # what this test claims to be testing (and is why
+            # `record.verification_status == "verified"` used to fail: the
+            # abstract-only path yields "unverified", never "verified").
+            full_text_available=True,
             source="arxiv"
         )
     ]

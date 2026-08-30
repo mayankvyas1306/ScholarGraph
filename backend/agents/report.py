@@ -7,16 +7,16 @@ from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Table, Tabl
 from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 from reportlab.lib import colors
 from backend.data.models import PaperMeta, GapClaim, Summary
-from backend.clients.claude_client import ClaudeClient
+from backend.clients.llm_client import LLMClient
 
 logger = logging.getLogger("researchmind.report")
 
 def generate_introduction(query: str, summaries: List[Summary], gap_claims: List[GapClaim]) -> str:
     """
-    Uses Gemini to write a rich, multi-paragraph introduction for the report.
+    Uses the LLM to write a rich, multi-paragraph introduction for the report.
     """
     logger.info("Generating report introduction...")
-    gemini = ClaudeClient()
+    llm = LLMClient()
     num_papers = len(summaries)
     num_gaps   = len(gap_claims)
 
@@ -42,7 +42,7 @@ Style: formal third-person academic prose, no markdown headers, no bullet points
 Return ONLY the plain prose text.
 """
     try:
-        text = gemini.complete(
+        text = llm.complete(
             prompt=prompt,
             system="You are an expert academic research writer producing publication-grade report introductions.",
             max_tokens=600,
@@ -67,10 +67,10 @@ Return ONLY the plain prose text.
 
 def generate_thematic_synthesis(query: str, summaries: List[Summary], gap_claims: List[GapClaim]) -> str:
     """
-    Leverages Gemini to synthesize a deep, publication-grade academic survey of the literature.
+    Leverages the LLM to synthesize a deep, publication-grade academic survey of the literature.
     """
     logger.info("Generating thematic academic synthesis of the literature...")
-    gemini = ClaudeClient()
+    llm = LLMClient()
 
     papers_input = ""
     for idx, s in enumerate(summaries):
@@ -123,7 +123,7 @@ STRICT WRITING REQUIREMENTS:
 Return ONLY the synthesized text with the ### subsection headers. No markdown code fences, no preamble.
 """
     try:
-        response = gemini.complete(
+        response = llm.complete(
             prompt=prompt,
             system=(
                 "You are a senior academic research writer and expert literature review synthesiser. "
@@ -144,14 +144,14 @@ Return ONLY the synthesized text with the ### subsection headers. No markdown co
 
 def generate_gap_narratives(query: str, gap_claims: List[GapClaim], summaries: List[Summary]) -> List[str]:
     """
-    Uses Gemini to write a rich explanatory narrative paragraph for each research gap.
+    Uses the LLM to write a rich explanatory narrative paragraph for each research gap.
     Returns a list of narrative strings, one per gap_claim.
     """
     if not gap_claims:
         return []
 
     logger.info(f"Generating narrative paragraphs for {len(gap_claims)} research gaps...")
-    gemini = ClaudeClient()
+    llm = LLMClient()
 
     paper_titles = [s.title for s in summaries]
 
@@ -182,7 +182,7 @@ Your paragraph MUST:
 Return ONLY the plain narrative paragraph text.
 """
         try:
-            text = gemini.complete(
+            text = llm.complete(
                 prompt=prompt,
                 system="You are an expert academic research writer specializing in research gap analysis.",
                 max_tokens=400,
@@ -500,7 +500,7 @@ def generate_pdf(
 def run_report(state: dict) -> dict:
     """
     Compiles summaries and gap claims into PDF and DOCX documents.
-    Generates Gemini-written Introduction, Thematic Synthesis, and
+    Generates LLM-written Introduction, Thematic Synthesis, and
     per-gap narrative paragraphs before assembling the final documents.
     """
     query = state.get("query", "")

@@ -4,7 +4,7 @@ from backend.agents.synthesis import run_synthesis
 from backend.orchestration.pipeline import create_initial_state
 from backend.data.models import PaperMeta, FieldRecord
 
-@patch('backend.clients.claude_client.ClaudeClient.complete')
+@patch('backend.clients.llm_client.LLMClient.complete')
 def test_synthesis_agent_flow(mock_complete):
     """
     Test synthesis agent with mocked LLM summary generation.
