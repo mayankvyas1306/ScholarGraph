@@ -1,5 +1,5 @@
 """
-Gemini LLM client for ResearchMind.
+Gemini LLM client for ScholarGraph.
 
 Named 'claude_client.py' for backward compatibility — all agent imports
 remain unchanged. The class 'ClaudeClient' wraps the Google Gemini API
@@ -11,7 +11,7 @@ import os
 import json
 import logging
 
-logger = logging.getLogger("researchmind.gemini")
+logger = logging.getLogger("scholargraph.gemini")
 
 # Model to use — gemini-3.6-flash is the latest fast model
 _GEMINI_MODEL = "gemini-3.6-flash"

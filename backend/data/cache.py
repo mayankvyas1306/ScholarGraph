@@ -6,7 +6,7 @@ from functools import wraps
 import logging
 
 logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger("researchmind.cache")
+logger = logging.getLogger("scholargraph.cache")
 
 # Cache folder location relative to this file: backend/db/cache
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))

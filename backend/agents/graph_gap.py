@@ -9,7 +9,7 @@ from backend.clients.claude_client import ClaudeClient
 from backend.data.models import PaperMeta, GapClaim
 from backend.data.graph_store import GraphStore
 
-logger = logging.getLogger("researchmind.graph_gap")
+logger = logging.getLogger("scholargraph.graph_gap")
 
 def compute_cosine_similarity(v1: List[float], v2: List[float]) -> float:
     """

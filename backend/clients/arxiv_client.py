@@ -5,7 +5,7 @@ from typing import List, Dict, Any, Optional
 from backend.data.cache import get_cache_key, read_from_cache, write_to_cache, exponential_backoff
 import logging
 
-logger = logging.getLogger("researchmind.arxiv")
+logger = logging.getLogger("scholargraph.arxiv")
 
 @exponential_backoff(max_retries=3, base_delay=2.0)
 def _fetch_arxiv_raw(url: str) -> str:

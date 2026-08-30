@@ -1,6 +1,6 @@
-# ScholorGraph — Full Build Prompt for AI Coding Agent
+# ScholarGraph — Full Build Prompt for AI Coding Agent
 
-You are building **ScholorGraph**, an agentic AI system that automates literature review and
+You are building **ScholarGraph**, an agentic AI system that automates literature review and
 research gap discovery. This prompt is the complete, self-contained specification. Follow it
 exactly — do not add agents, swap the graph backend, or expand scope beyond what is defined here.
 Every design decision below has already been made and reviewed; implement it, don't redesign it.
@@ -202,7 +202,7 @@ Build an in-memory NetworkX `MultiDiGraph` with this schema:
 ## 8. Repository Structure
 
 ```
-scholorgraph/
+scholargraph/
 ├── backend/
 │   ├── api/                 # FastAPI routes
 │   │   ├── main.py
@@ -325,7 +325,7 @@ accuracy validation TC-A01–TC-A04 and failure-mode TC-F01–TC-F04).
 ## 14. Differentiation Statement (keep this in mind throughout the build)
 
 "Unlike Elicit or Consensus, which return conclusions without showing their reasoning graph,
-ScholorGraph exposes the citation subgraph behind every claimed research gap — the user can
+ScholarGraph exposes the citation subgraph behind every claimed research gap — the user can
 trace exactly which papers and missing links produced that conclusion." Every implementation
 decision should protect this property. If a shortcut would break subgraph traceability, don't
 take it.

@@ -4,7 +4,7 @@ from typing import List, Dict, Any, Optional
 from backend.data.cache import get_cache_key, read_from_cache, write_to_cache, exponential_backoff
 import logging
 
-logger = logging.getLogger("researchmind.s2")
+logger = logging.getLogger("scholargraph.s2")
 
 # Fields to retrieve from Semantic Scholar API
 # Added openAccessPdf to get direct open-access PDF links

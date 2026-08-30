@@ -101,7 +101,7 @@ export default function QAAssistant({ jobId, isDone }) {
         <div className="qa-welcome">
           <div className="qa-welcome-badge">
             <Sparkles size={11} style={{ marginRight: 5 }} />
-            ResearchMind Co-Pilot
+            ScholarGraph Co-Pilot
           </div>
           <h2 className="qa-welcome-title">Ask about this research space</h2>
           <p className="qa-welcome-desc">

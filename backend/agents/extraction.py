@@ -7,7 +7,7 @@ from typing import List, Dict, Any, Tuple
 from backend.clients.claude_client import ClaudeClient
 from backend.data.models import PaperMeta, FieldRecord
 
-logger = logging.getLogger("researchmind.extraction")
+logger = logging.getLogger("scholargraph.extraction")
 
 
 def extract_text_from_pdf(pdf_bytes: bytes) -> str:
@@ -370,7 +370,7 @@ def run_extraction(state: dict) -> dict:
         if paper.pdf_url and paper.full_text_available:
             logger.info(f"Attempting to download PDF for '{paper.title}' from {paper.pdf_url}")
             try:
-                headers = {"User-Agent": "Mozilla/5.0 (compatible; ResearchMindBot/1.0)"}
+                headers = {"User-Agent": "Mozilla/5.0 (compatible; ScholarGraphBot/1.0)"}
                 response = requests.get(paper.pdf_url, headers=headers, timeout=20)
 
                 # Verify it is a valid PDF

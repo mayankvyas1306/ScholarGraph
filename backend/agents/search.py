@@ -6,7 +6,7 @@ from backend.clients.s2_client import search_semantic_scholar
 from backend.data.vector_store import VectorStore
 from backend.data.models import PaperMeta
 
-logger = logging.getLogger("researchmind.search")
+logger = logging.getLogger("scholargraph.search")
 
 def clean_title(title: str) -> str:
     """

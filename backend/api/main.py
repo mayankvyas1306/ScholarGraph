@@ -14,10 +14,10 @@ logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s [%(levelname)s] %(name)s: %(message)s"
 )
-logger = logging.getLogger("researchmind.api.main")
+logger = logging.getLogger("scholargraph.api.main")
 
 app = FastAPI(
-    title="ResearchMind API",
+    title="ScholarGraph API",
     description="Agentic AI system for automated literature review and gap discovery",
     version="1.0"
 )

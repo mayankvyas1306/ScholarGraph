@@ -24,7 +24,7 @@ const TABS = [
 ];
 
 /* ─── localStorage helpers ─── */
-const LS_KEY = 'researchmind_session';
+const LS_KEY = 'scholargraph_session';
 
 function saveSession(data) {
   try { localStorage.setItem(LS_KEY, JSON.stringify(data)); }
@@ -212,7 +212,7 @@ export default function App() {
             <BookOpen size={16} color="#fff" />
           </div>
           <div className="topbar-brand">
-            <span className="topbar-brand-name">ResearchMind</span>
+            <span className="topbar-brand-name">ScholarGraph</span>
             <span className="topbar-brand-sub">Literature review, with its evidence attached</span>
           </div>
         </div>
@@ -382,7 +382,7 @@ export default function App() {
                   <span className="hero-title-italic">Synthesized.</span>
                 </h1>
                 <p className="hero-subtitle">
-                  Enter a research topic in the search bar above. ResearchMind retrieves
+                  Enter a research topic in the search bar above. ScholarGraph retrieves
                   papers, extracts methods, maps the citation graph, surfaces gaps,
                   and compiles a publication-grade report — automatically.
                 </p>
