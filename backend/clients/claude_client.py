@@ -50,9 +50,7 @@ class ClaudeClient:
             self._client = None
             self.provider = "mock"
 
-    # ------------------------------------------------------------------
     # Public interface
-    # ------------------------------------------------------------------
 
     def complete(
         self,
@@ -100,9 +98,7 @@ class ClaudeClient:
             logger.error(f"GeminiClient: API call failed — {exc}. Falling back to mock.")
             return self._mock_response(prompt)
 
-    # ------------------------------------------------------------------
     # Mock responses (used when key is absent or on API failure)
-    # ------------------------------------------------------------------
 
     def _mock_response(self, prompt: str) -> str:
         p = prompt.lower()

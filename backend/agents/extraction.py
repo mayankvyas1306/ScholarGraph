@@ -9,10 +9,7 @@ from backend.data.models import PaperMeta, FieldRecord
 
 logger = logging.getLogger("scholargraph.extraction")
 
-# Canonical blank/useless values to detect. Moved above verify_grounding
-# (which now also reads this set) so it's defined before first use in
-# reading order; Python only needs it to exist by call time, but this keeps
-# the file readable top-to-bottom.
+
 _BLANK_VALUES = {
     "not available", "not specified", "n/a", "none", "unknown",
     "not mentioned", "not stated", "not provided", "not given",
@@ -67,16 +64,7 @@ def verify_grounding(extracted: Dict[str, str], text: str, abstract_only: bool) 
     for f in fields_to_check:
         val = extracted.get(f, "").strip()
 
-        # Match against the canonical `_BLANK_VALUES` set (string equality
-        # only — no length heuristic, unlike `_is_blank`, so short-but-valid
-        # values like "BERT" or "GPT-2" still go through verification below).
-        # The previous local list here didn't include "not available" — the
-        # exact placeholder FULL_TEXT_PROMPT/ABSTRACT_ONLY_PROMPT instruct
-        # the LLM to write when a field has zero evidence — so a correctly
-        # "blank" field fell through to the quote-check below, found no
-        # supporting quote (there isn't one), and incorrectly marked the
-        # whole record "failed" instead of being treated as an acceptable
-        # gap.
+       
         if not val or val.lower() in _BLANK_VALUES:
             notes.append(f"Field '{f}': not found in text (acceptable).")
             continue
@@ -118,9 +106,7 @@ def verify_grounding(extracted: Dict[str, str], text: str, abstract_only: bool) 
     return status, "; ".join(notes)
 
 
-# ---------------------------------------------------------------------------
 # LLM Extraction Prompts
-# ---------------------------------------------------------------------------
 
 FULL_TEXT_PROMPT = """You are an expert academic research analyst. Extract structured information from the paper text below.
 
