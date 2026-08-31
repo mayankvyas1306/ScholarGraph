@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Search, ChevronDown, ChevronUp, ExternalLink, BookOpen } from 'lucide-react';
+import { Search, ChevronDown, ChevronUp, ExternalLink } from 'lucide-react';
 
 /** Renders a muted dash when a value is empty or "not specified" */
 function CellValue({ value }) {
@@ -32,43 +32,6 @@ function AuthorsCell({ authors = [] }) {
   );
 }
 
-/** Coloured verification badge + optional "Abstract only" sub-badge */
-function VerificationBadge({ status, abstractOnly }) {
-  const label =
-    status === 'verified'  ? 'Verified'   :
-    status === 'failed'    ? 'Failed'     :
-    status === 'heuristic' ? 'Heuristic'  : 'Unverified';
-
-  const badgeStyle =
-    status === 'verified'
-      ? { background: 'rgba(52,211,153,0.12)', color: '#34d399', borderColor: 'rgba(52,211,153,0.3)' }
-      : status === 'failed'
-      ? { background: 'rgba(239,68,68,0.10)', color: '#f87171', borderColor: 'rgba(239,68,68,0.25)' }
-      : status === 'heuristic'
-      ? { background: 'rgba(251,191,36,0.10)', color: '#fbbf24', borderColor: 'rgba(251,191,36,0.25)' }
-      : { background: 'transparent',           color: 'var(--gray-700)', borderColor: 'var(--border)' };
-
-  return (
-    <span style={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
-      <span className="badge" style={badgeStyle}>{label}</span>
-      {abstractOnly && (
-        <span
-          className="badge"
-          style={{
-            background: 'rgba(251,146,60,0.10)',
-            color: '#fb923c',
-            borderColor: 'rgba(251,146,60,0.25)',
-            fontSize: '8px',
-          }}
-          title="Fields extracted from abstract only — full text unavailable"
-        >
-          <BookOpen size={8} style={{ marginRight: 2 }} />
-          Abstract only
-        </span>
-      )}
-    </span>
-  );
-}
 
 export default function ComparisonTable({ data }) {
   const [searchTerm, setSearchTerm]       = useState('');
@@ -132,16 +95,15 @@ export default function ComparisonTable({ data }) {
   };
 
   const COLS = [
-    { key: 'title',               label: 'Title' },
-    { key: 'authors',             label: 'Authors',    sortable: false },
-    { key: 'year',                label: 'Year',       width: 60 },
-    { key: 'venue',               label: 'Venue' },
-    { key: 'method',              label: 'Method' },
-    { key: 'dataset',             label: 'Dataset' },
-    { key: 'key_metric',          label: 'Key Metric' },
-    { key: 'limitation',          label: 'Limitation' },
-    { key: 'verification_status', label: 'Status',     width: 90 },
-  ];
+  { key: 'title',       label: 'Title' },
+  { key: 'authors',     label: 'Authors',    sortable: false },
+  { key: 'year',        label: 'Year',       width: 60 },
+  { key: 'venue',       label: 'Venue' },
+  { key: 'method',      label: 'Method' },
+  { key: 'dataset',     label: 'Dataset' },
+  { key: 'key_metric',  label: 'Key Metric' },
+  { key: 'limitation',  label: 'Limitation' },
+];
 
   return (
     <div className="fade-in">
@@ -248,19 +210,12 @@ export default function ComparisonTable({ data }) {
                     {/* Limitation */}
                     <td className="limitation-cell" title={item.limitation}><CellValue value={item.limitation} /></td>
 
-                    {/* Verification Status */}
-                    <td>
-                      <VerificationBadge
-                        status={item.verification_status}
-                        abstractOnly={item.abstract_only}
-                      />
-                    </td>
                   </tr>
                 );
               })
             ) : (
               <tr>
-                <td colSpan={9} style={{ textAlign: 'center', padding: '30px', color: 'var(--text-muted)' }}>
+                <td colSpan={8} style={{ textAlign: 'center', padding: '30px', color: 'var(--text-muted)' }}>
                   No matching papers found.
                 </td>
               </tr>

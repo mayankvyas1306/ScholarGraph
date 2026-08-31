@@ -18,7 +18,7 @@ from langchain_core.messages import SystemMessage, HumanMessage
 
 from backend.clients.llm_provider import get_chat_model
 
-logger = logging.getLogger("researchmind.llm")
+logger = logging.getLogger("scholargraph.llm")
 
 
 class LLMClient:
@@ -41,9 +41,7 @@ class LLMClient:
                 f"LLMClient: Initialized successfully via LangChain (provider='{self.provider}')."
             )
 
-    # ------------------------------------------------------------------
     # Public interface
-    # ------------------------------------------------------------------
 
     def complete(
         self,
@@ -87,9 +85,7 @@ class LLMClient:
             logger.error(f"LLMClient: API call failed ({self.provider}) — {exc}. Falling back to mock.")
             return self._mock_response(prompt)
 
-    # ------------------------------------------------------------------
     # Mock responses (used when no provider is configured, or on failure)
-    # ------------------------------------------------------------------
 
     def _mock_response(self, prompt: str) -> str:
         p = prompt.lower()

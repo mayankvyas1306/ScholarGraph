@@ -92,14 +92,12 @@ function StatsBanner({ papers = [], comparisonTable = [] }) {
   const arxivCount = papers.filter(p => p.source === 'arxiv').length;
   const s2Count    = papers.filter(p => p.source === 'semantic_scholar').length;
   const mergedCount = papers.filter(p => p.source === 'merged').length;
-  const verifiedCount = comparisonTable.filter(r => r.verification_status === 'verified').length;
   const withPdf = papers.filter(p => p.full_text_available).length;
 
   const stats = [
     { icon: BookOpen,     value: papers.length,    label: 'Papers analysed' },
     { icon: Database,     value: arxivCount,        label: 'From arXiv' },
     { icon: Layers,       value: s2Count + mergedCount, label: 'From Semantic Scholar' },
-    { icon: Check,        value: verifiedCount,     label: 'Verified extractions' },
     { icon: FileText,     value: withPdf,           label: 'Full-text PDFs' },
   ];
 
@@ -126,11 +124,6 @@ function CompactTable({ data = [] }) {
     return null;
   };
 
-  const statusColor = (s) => ({
-    verified:   'var(--accent-green)',
-    unverified: 'var(--accent-amber)',
-    failed:     'var(--accent-red)',
-  })[s] || 'var(--text-muted)';
 
   return (
     <div className="rp-table-wrap">
@@ -138,7 +131,7 @@ function CompactTable({ data = [] }) {
         <thead>
           <tr>
             <th>#</th><th>Title</th><th>Year</th><th>Method</th>
-            <th>Dataset</th><th>Key Metric</th><th>Limitation</th><th>Status</th>
+            <th>Dataset</th><th>Key Metric</th><th>Limitation</th>
           </tr>
         </thead>
         <tbody>
@@ -160,14 +153,6 @@ function CompactTable({ data = [] }) {
                 <td>{row.dataset}</td>
                 <td>{row.key_metric}</td>
                 <td>{row.limitation}</td>
-                <td>
-                  <span style={{
-                    fontSize: '9px', fontWeight: 600, textTransform: 'uppercase',
-                    color: statusColor(row.verification_status), letterSpacing: '0.05em'
-                  }}>
-                    {row.verification_status}
-                  </span>
-                </td>
               </tr>
             );
           })}
