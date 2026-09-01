@@ -12,12 +12,9 @@ pytest>=7.3.0
 reportlab>=4.0.0
 google-genai>=2.0.0
 python-dotenv>=1.0.0
-
-# LLM layer — provider-agnostic via LangChain (see backend/clients/llm_provider.py).
-# All three provider packages are listed so LLM_PROVIDER can be switched at
-# runtime without a reinstall; only the one whose API key is set gets used.
 langchain>=0.2.7
 langchain-core>=0.2.0
 langchain-anthropic>=0.1.20
 langchain-google-genai>=1.0.8
 langchain-openai>=0.1.20
+langchain-ollama>=0.1.3
