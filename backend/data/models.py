@@ -15,7 +15,9 @@ class PaperMeta(BaseModel):
     citations: List[str] = Field(default_factory=list)  # IDs of papers cited by this paper
     doi: Optional[str] = None
     arxiv_id: Optional[str] = None
-    source: str  # 'arxiv', 'semantic_scholar', or 'merged'
+    source: str  
+    # All sources that contributed this paper
+    sources: List[str] = Field(default_factory=list)
     s2_paper_id: Optional[str] = None  # Raw Semantic Scholar paperId, kept
     # separately from `id` (which prefers DOI) so that `citations` — which
     # Semantic Scholar always expresses in terms of paperId — can be
@@ -42,7 +44,7 @@ class GapClaim(BaseModel):
     gap_id: str
     topic_label: str
     description: str
-    citation_density: float
+    citation_density: Optional[float] = None
     papers_in_cluster: List[str]  # Paper IDs in this gap cluster
     subgraph_snapshot: Dict[str, Any]  # NetworkX node-link JSON export format
     suggested_directions: List[str] = Field(default_factory=list)

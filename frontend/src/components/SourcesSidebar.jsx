@@ -65,8 +65,8 @@ export default function SourcesSidebar({ papers = [], highlightedIds = [] }) {
                     style={{
                       color: 'var(--text-primary)',
                       textDecoration: 'none',
-                      fontSize: '11px',
-                      lineHeight: '1.4',
+                      fontSize: '12px',
+                      lineHeight: '1.5',
                       display: '-webkit-box',
                       WebkitLineClamp: 2,
                       WebkitBoxOrient: 'vertical',
@@ -97,6 +97,45 @@ export default function SourcesSidebar({ papers = [], highlightedIds = [] }) {
                 <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginTop: '3px' }}>
                   <span className="source-year">{displayYear}</span>
                   <span className="source-id" style={{ fontSize: '9px' }}>{idBadge}</span>
+                  {Array.isArray(paper.sources) && paper.sources.length > 0 && (
+                    <span
+                      className="source-id"
+                      style={{
+                        fontSize: '9px',
+                        textTransform: 'uppercase'
+                      }}
+                    >
+                      <span
+                        style={{
+                          display: 'inline-flex',
+                          alignItems: 'center',
+                          maxWidth: '120px',
+                          overflow: 'hidden',
+                          textOverflow: 'ellipsis',
+                          whiteSpace: 'nowrap',
+                          padding: '2px 6px',
+                          borderRadius: '999px',
+                          fontSize: '9px',
+                          fontWeight: 700,
+                          letterSpacing: '0.06em',
+                          textTransform: 'uppercase',
+                          color: 'var(--text-secondary)',
+                          background: 'rgba(255,255,255,0.48)',
+                          border: '1px solid var(--border)',
+                        }}
+                      >
+                        {paper.sources
+                          .map(source =>
+                            source === 'semantic_scholar'
+                              ? 'Semantic Scholar'
+                              : source === 'ieee'
+                                ? 'IEEE'
+                                : 'arXiv'
+                          )
+                          .join(' + ')}
+                      </span>
+                    </span>
+                  )}
                   {linkInfo && (
                     <a
                       href={linkInfo.href}

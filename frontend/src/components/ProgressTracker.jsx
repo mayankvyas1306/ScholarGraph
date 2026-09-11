@@ -3,7 +3,7 @@ import { CheckCircle2, Loader2, AlertCircle, Circle } from 'lucide-react';
 
 const STAGES = [
   { key: 'planner',   label: 'Planner',   desc: 'Topic decomposition' },
-  { key: 'search',    label: 'Search',    desc: 'arXiv & S2 retrieval' },
+  { key: 'search',    label: 'Search',    desc: 'arXiv + Semantic Scholar + IEEE Xplore' },
   { key: 'extraction',label: 'Extraction',desc: 'PDF field extraction' },
   { key: 'synthesis', label: 'Synthesis', desc: 'Summaries & comparison' },
   { key: 'graph_gap', label: 'Graph / Gap', desc: 'Citation graph & gaps' },
@@ -32,7 +32,7 @@ export default function ProgressTracker({ agentStatus }) {
           <div key={stage.key} className="pipeline-stage">
             <div className={`pipeline-stage-icon ${status}`}>
               {status === 'pending'
-                ? <span style={{ fontSize: '9px', fontWeight: 700, color: 'var(--text-muted)' }}>{idx + 1}</span>
+                ? <span style={{ fontSize: '10px', fontWeight: 700, color: 'var(--text-muted)' }}>{idx + 1}</span>
                 : getIcon(status)
               }
             </div>

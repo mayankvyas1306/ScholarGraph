@@ -3,6 +3,7 @@ import logging
 from typing import List, Dict, Any
 from backend.clients.arxiv_client import search_arxiv
 from backend.clients.s2_client import search_semantic_scholar
+from backend.clients.ieee_client import search_ieee
 from backend.data.vector_store import VectorStore
 from backend.data.models import PaperMeta
 
@@ -60,21 +61,80 @@ def run_search(state: dict) -> dict:
     )
     
     raw_results = []
-    
-    # 1. Fetch papers from both sources
+
     for query in sub_queries:
+
+        # -----------------------------------------
+        # arXiv
+        # -----------------------------------------
+
         try:
-            arxiv_results = search_arxiv(query, limit=15, year_from=year_from, year_to=year_to)
+            arxiv_results = search_arxiv(
+                query,
+                limit=15,
+                year_from=year_from,
+                year_to=year_to,
+            )
+
             raw_results.extend(arxiv_results)
+
+            logger.info(
+                f"Search Agent: arXiv returned "
+                f"{len(arxiv_results)} papers for '{query}'"
+            )
+
         except Exception as e:
-            logger.error(f"Search Agent arXiv sub-query fail: {e}")
-            
+            logger.error(
+                f"Search Agent arXiv sub-query fail: {e}"
+            )
+
+    # -----------------------------------------
+    # Semantic Scholar
+    # -----------------------------------------
+
         try:
-            s2_results = search_semantic_scholar(query, limit=15, year_from=year_from, year_to=year_to)
+            s2_results = search_semantic_scholar(
+                query,
+                limit=15,
+                year_from=year_from,
+                year_to=year_to,
+            )
+
             raw_results.extend(s2_results)
+
+            logger.info(
+                f"Search Agent: Semantic Scholar returned "
+                f"{len(s2_results)} papers for '{query}'"
+            )
+
         except Exception as e:
-            logger.error(f"Search Agent Semantic Scholar sub-query fail: {e}")
-            
+            logger.error(
+                f"Search Agent Semantic Scholar sub-query fail: {e}"
+            )
+
+    # -----------------------------------------
+    # IEEE Xplore
+    # -----------------------------------------
+
+        try:
+            ieee_results = search_ieee(
+                query,
+                limit=15,
+                year_from=year_from,
+                year_to=year_to,
+            )
+
+            raw_results.extend(ieee_results)
+
+            logger.info(
+                f"Search Agent: IEEE returned "
+                f"{len(ieee_results)} papers for '{query}'"
+            )
+
+        except Exception as e:
+            logger.error(
+                f"Search Agent IEEE sub-query fail: {e}"
+            )
     # 2. Deduplicate and merge results
     deduped_papers = []
     
@@ -115,8 +175,20 @@ def run_search(state: dict) -> dict:
             if raw.get("s2_paper_id") and not existing.s2_paper_id:
                 existing.s2_paper_id = raw.get("s2_paper_id")
             
-            if existing.source != raw.get("source"):
+            raw_source = raw.get("source")
+
+            if not existing.sources:
+                existing.sources = [existing.source]
+
+            if raw_source and raw_source not in existing.sources:
+                existing.sources.append(raw_source)
+
+            if len(existing.sources) > 1:
                 existing.source = "merged"
+            else:
+                existing.source = existing.sources[0]
+            # Keep source ordering stable for deterministic UI/report rendering.
+            existing.sources = list(dict.fromkeys(existing.sources))
         else:
             # Add as a new unique PaperMeta
             paper_meta = PaperMeta(
@@ -128,13 +200,25 @@ def run_search(state: dict) -> dict:
                 abstract=raw["abstract"],
                 pdf_url=raw.get("pdf_url"),
                 url=raw.get("url"),
-                full_text_available=raw.get("full_text_available", False),
-                citation_count=raw.get("citation_count", 0),
-                citations=raw.get("citations", []),
+                full_text_available=raw.get(
+                    "full_text_available",
+                    False
+                ),
+                citation_count=raw.get(
+                    "citation_count",
+                    0
+                ),
+                citations=raw.get(
+                    "citations",
+                    []
+                ),
                 doi=raw.get("doi"),
                 arxiv_id=raw.get("arxiv_id"),
                 source=raw["source"],
-                s2_paper_id=raw.get("s2_paper_id"),
+                sources=[raw["source"]],
+                s2_paper_id=raw.get(
+                    "s2_paper_id"
+                ),
             )
             deduped_papers.append(paper_meta)
 

@@ -373,6 +373,17 @@ export default function App() {
             {/* Hero — no job yet */}
             {!jobId && !error && (
               <div className="hero-empty">
+                <div className="hero-research-field" aria-hidden="true">
+                  <span className="research-orbit orbit-one" />
+                  <span className="research-orbit orbit-two" />
+                  <span className="research-orbit orbit-three" />
+
+                  <span className="research-node node-one" />
+                  <span className="research-node node-two" />
+                  <span className="research-node node-three" />
+                  <span className="research-node node-four" />
+                  <span className="research-node node-five" />
+                </div>
                 <div className="hero-badge">
                   <Sparkles size={9} />
                   AI-Powered Literature Review
@@ -388,7 +399,7 @@ export default function App() {
                 </p>
                 <div className="hero-features">
                   <div className="hero-feature-chip">
-                    <div className="hero-feature-chip-dot" />arXiv + Semantic Scholar
+                    <div className="hero-feature-chip-dot" />arXiv + Semantic Scholar + IEEE Xplore
                   </div>
                   <div className="hero-feature-chip">
                     <div className="hero-feature-chip-dot" />LLM Extraction &amp; Synthesis
